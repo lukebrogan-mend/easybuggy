@@ -1,0 +1,2389 @@
+[
+    {
+        "check_type": "dockerfile",
+        "results": {
+            "passed_checks": [
+                {
+                    "check_id": "CKV_DOCKER_11",
+                    "bc_check_id": "BC_DKR_GENERAL_9",
+                    "check_name": "Ensure From Alias are unique for multistage builds.",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": null
+                    },
+                    "code_block": [
+                        [
+                            1,
+                            "FROM maven:3.8-jdk-8 as builder\n"
+                        ],
+                        [
+                            2,
+                            "COPY . /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            3,
+                            "WORKDIR /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            4,
+                            "RUN mvn -B package\n"
+                        ],
+                        [
+                            5,
+                            "\n"
+                        ],
+                        [
+                            6,
+                            "FROM openjdk:8-slim\n"
+                        ],
+                        [
+                            7,
+                            "COPY --from=builder /usr/src/easybuggy/target/easybuggy.jar /\n"
+                        ],
+                        [
+                            8,
+                            "CMD [\"java\", \"-XX:MaxMetaspaceSize=128m\", \"-Xloggc:logs/gc_%p_%t.log\", \"-Xmx256m\", \"-XX:MaxDirectMemorySize=90m\", \"-XX:+UseSerialGC\", \"-XX:+PrintHeapAtGC\", \"-XX:+PrintGCDetails\", \"-XX:+PrintGCDateStamps\", \"-XX:+UseGCLogFileRotation\", \"-XX:NumberOfGCLogFiles=5\", \"-XX:GCLogFileSize=10M\", \"-XX:GCTimeLimit=15\", \"-XX:GCHeapFreeLimit=50\", \"-XX:+HeapDumpOnOutOfMemoryError\", \"-XX:HeapDumpPath=logs/\", \"-XX:ErrorFile=logs/hs_err_pid%p.log\", \"-agentlib:jdwp=transport=dt_socket,server=y,address=9009,suspend=n\", \"-Dderby.stream.error.file=logs/derby.log\", \"-Dderby.infolog.append=true\", \"-Dderby.language.logStatementText=true\", \"-Dderby.locks.deadlockTrace=true\", \"-Dderby.locks.monitor=true\", \"-Dderby.storage.rowLocking=true\", \"-Dcom.sun.management.jmxremote\", \"-Dcom.sun.management.jmxremote.port=7900\", \"-Dcom.sun.management.jmxremote.ssl=false\", \"-Dcom.sun.management.jmxremote.authenticate=false\", \"-ea\", \"-jar\", \"easybuggy.jar\"]\n"
+                        ]
+                    ],
+                    "file_path": "/Dockerfile",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/Dockerfile",
+                    "repo_file_path": "/Dockerfile",
+                    "file_line_range": [
+                        1,
+                        8
+                    ],
+                    "resource": "/Dockerfile.",
+                    "evaluations": null,
+                    "check_class": "checkov.dockerfile.checks.AliasIsUnique",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-docker-from-alias-is-unique-for-multistage-builds",
+                    "details": [],
+                    "check_len": null
+                },
+                {
+                    "check_id": "CKV_DOCKER_7",
+                    "bc_check_id": "BC_DKR_7",
+                    "check_name": "Ensure the base image uses a non latest version tag",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": null
+                    },
+                    "code_block": [
+                        [
+                            1,
+                            "FROM maven:3.8-jdk-8 as builder\n"
+                        ],
+                        [
+                            2,
+                            "COPY . /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            3,
+                            "WORKDIR /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            4,
+                            "RUN mvn -B package\n"
+                        ],
+                        [
+                            5,
+                            "\n"
+                        ],
+                        [
+                            6,
+                            "FROM openjdk:8-slim\n"
+                        ],
+                        [
+                            7,
+                            "COPY --from=builder /usr/src/easybuggy/target/easybuggy.jar /\n"
+                        ],
+                        [
+                            8,
+                            "CMD [\"java\", \"-XX:MaxMetaspaceSize=128m\", \"-Xloggc:logs/gc_%p_%t.log\", \"-Xmx256m\", \"-XX:MaxDirectMemorySize=90m\", \"-XX:+UseSerialGC\", \"-XX:+PrintHeapAtGC\", \"-XX:+PrintGCDetails\", \"-XX:+PrintGCDateStamps\", \"-XX:+UseGCLogFileRotation\", \"-XX:NumberOfGCLogFiles=5\", \"-XX:GCLogFileSize=10M\", \"-XX:GCTimeLimit=15\", \"-XX:GCHeapFreeLimit=50\", \"-XX:+HeapDumpOnOutOfMemoryError\", \"-XX:HeapDumpPath=logs/\", \"-XX:ErrorFile=logs/hs_err_pid%p.log\", \"-agentlib:jdwp=transport=dt_socket,server=y,address=9009,suspend=n\", \"-Dderby.stream.error.file=logs/derby.log\", \"-Dderby.infolog.append=true\", \"-Dderby.language.logStatementText=true\", \"-Dderby.locks.deadlockTrace=true\", \"-Dderby.locks.monitor=true\", \"-Dderby.storage.rowLocking=true\", \"-Dcom.sun.management.jmxremote\", \"-Dcom.sun.management.jmxremote.port=7900\", \"-Dcom.sun.management.jmxremote.ssl=false\", \"-Dcom.sun.management.jmxremote.authenticate=false\", \"-ea\", \"-jar\", \"easybuggy.jar\"]\n"
+                        ]
+                    ],
+                    "file_path": "/Dockerfile",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/Dockerfile",
+                    "repo_file_path": "/Dockerfile",
+                    "file_line_range": [
+                        1,
+                        8
+                    ],
+                    "resource": "/Dockerfile.",
+                    "evaluations": null,
+                    "check_class": "checkov.dockerfile.checks.ReferenceLatestTag",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-the-base-image-uses-a-non-latest-version-tag",
+                    "details": [],
+                    "check_len": null
+                },
+                {
+                    "check_id": "CKV_DOCKER_9",
+                    "bc_check_id": "BC_DKR_NETWORKING_1",
+                    "check_name": "Ensure that APT isn't used",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": null
+                    },
+                    "code_block": [
+                        [
+                            1,
+                            "FROM maven:3.8-jdk-8 as builder\n"
+                        ],
+                        [
+                            2,
+                            "COPY . /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            3,
+                            "WORKDIR /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            4,
+                            "RUN mvn -B package\n"
+                        ],
+                        [
+                            5,
+                            "\n"
+                        ],
+                        [
+                            6,
+                            "FROM openjdk:8-slim\n"
+                        ],
+                        [
+                            7,
+                            "COPY --from=builder /usr/src/easybuggy/target/easybuggy.jar /\n"
+                        ],
+                        [
+                            8,
+                            "CMD [\"java\", \"-XX:MaxMetaspaceSize=128m\", \"-Xloggc:logs/gc_%p_%t.log\", \"-Xmx256m\", \"-XX:MaxDirectMemorySize=90m\", \"-XX:+UseSerialGC\", \"-XX:+PrintHeapAtGC\", \"-XX:+PrintGCDetails\", \"-XX:+PrintGCDateStamps\", \"-XX:+UseGCLogFileRotation\", \"-XX:NumberOfGCLogFiles=5\", \"-XX:GCLogFileSize=10M\", \"-XX:GCTimeLimit=15\", \"-XX:GCHeapFreeLimit=50\", \"-XX:+HeapDumpOnOutOfMemoryError\", \"-XX:HeapDumpPath=logs/\", \"-XX:ErrorFile=logs/hs_err_pid%p.log\", \"-agentlib:jdwp=transport=dt_socket,server=y,address=9009,suspend=n\", \"-Dderby.stream.error.file=logs/derby.log\", \"-Dderby.infolog.append=true\", \"-Dderby.language.logStatementText=true\", \"-Dderby.locks.deadlockTrace=true\", \"-Dderby.locks.monitor=true\", \"-Dderby.storage.rowLocking=true\", \"-Dcom.sun.management.jmxremote\", \"-Dcom.sun.management.jmxremote.port=7900\", \"-Dcom.sun.management.jmxremote.ssl=false\", \"-Dcom.sun.management.jmxremote.authenticate=false\", \"-ea\", \"-jar\", \"easybuggy.jar\"]\n"
+                        ]
+                    ],
+                    "file_path": "/Dockerfile",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/Dockerfile",
+                    "repo_file_path": "/Dockerfile",
+                    "file_line_range": [
+                        1,
+                        8
+                    ],
+                    "resource": "/Dockerfile.",
+                    "evaluations": null,
+                    "check_class": "checkov.dockerfile.checks.RunUsingAPT",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-docker-apt-is-not-used",
+                    "details": [],
+                    "check_len": null
+                },
+                {
+                    "check_id": "CKV_DOCKER_5",
+                    "bc_check_id": "BC_DKR_4",
+                    "check_name": "Ensure update instructions are not use alone in the Dockerfile",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": null
+                    },
+                    "code_block": [
+                        [
+                            1,
+                            "FROM maven:3.8-jdk-8 as builder\n"
+                        ],
+                        [
+                            2,
+                            "COPY . /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            3,
+                            "WORKDIR /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            4,
+                            "RUN mvn -B package\n"
+                        ],
+                        [
+                            5,
+                            "\n"
+                        ],
+                        [
+                            6,
+                            "FROM openjdk:8-slim\n"
+                        ],
+                        [
+                            7,
+                            "COPY --from=builder /usr/src/easybuggy/target/easybuggy.jar /\n"
+                        ],
+                        [
+                            8,
+                            "CMD [\"java\", \"-XX:MaxMetaspaceSize=128m\", \"-Xloggc:logs/gc_%p_%t.log\", \"-Xmx256m\", \"-XX:MaxDirectMemorySize=90m\", \"-XX:+UseSerialGC\", \"-XX:+PrintHeapAtGC\", \"-XX:+PrintGCDetails\", \"-XX:+PrintGCDateStamps\", \"-XX:+UseGCLogFileRotation\", \"-XX:NumberOfGCLogFiles=5\", \"-XX:GCLogFileSize=10M\", \"-XX:GCTimeLimit=15\", \"-XX:GCHeapFreeLimit=50\", \"-XX:+HeapDumpOnOutOfMemoryError\", \"-XX:HeapDumpPath=logs/\", \"-XX:ErrorFile=logs/hs_err_pid%p.log\", \"-agentlib:jdwp=transport=dt_socket,server=y,address=9009,suspend=n\", \"-Dderby.stream.error.file=logs/derby.log\", \"-Dderby.infolog.append=true\", \"-Dderby.language.logStatementText=true\", \"-Dderby.locks.deadlockTrace=true\", \"-Dderby.locks.monitor=true\", \"-Dderby.storage.rowLocking=true\", \"-Dcom.sun.management.jmxremote\", \"-Dcom.sun.management.jmxremote.port=7900\", \"-Dcom.sun.management.jmxremote.ssl=false\", \"-Dcom.sun.management.jmxremote.authenticate=false\", \"-ea\", \"-jar\", \"easybuggy.jar\"]\n"
+                        ]
+                    ],
+                    "file_path": "/Dockerfile",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/Dockerfile",
+                    "repo_file_path": "/Dockerfile",
+                    "file_line_range": [
+                        1,
+                        8
+                    ],
+                    "resource": "/Dockerfile.",
+                    "evaluations": null,
+                    "check_class": "checkov.dockerfile.checks.UpdateNotAlone",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-update-instructions-are-not-used-alone-in-the-dockerfile",
+                    "details": [],
+                    "check_len": null
+                },
+                {
+                    "check_id": "CKV_DOCKER_10",
+                    "bc_check_id": "BC_DKR_GENERAL_10",
+                    "check_name": "Ensure that WORKDIR values are absolute paths",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": null
+                    },
+                    "code_block": [
+                        [
+                            1,
+                            "FROM maven:3.8-jdk-8 as builder\n"
+                        ],
+                        [
+                            2,
+                            "COPY . /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            3,
+                            "WORKDIR /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            4,
+                            "RUN mvn -B package\n"
+                        ],
+                        [
+                            5,
+                            "\n"
+                        ],
+                        [
+                            6,
+                            "FROM openjdk:8-slim\n"
+                        ],
+                        [
+                            7,
+                            "COPY --from=builder /usr/src/easybuggy/target/easybuggy.jar /\n"
+                        ],
+                        [
+                            8,
+                            "CMD [\"java\", \"-XX:MaxMetaspaceSize=128m\", \"-Xloggc:logs/gc_%p_%t.log\", \"-Xmx256m\", \"-XX:MaxDirectMemorySize=90m\", \"-XX:+UseSerialGC\", \"-XX:+PrintHeapAtGC\", \"-XX:+PrintGCDetails\", \"-XX:+PrintGCDateStamps\", \"-XX:+UseGCLogFileRotation\", \"-XX:NumberOfGCLogFiles=5\", \"-XX:GCLogFileSize=10M\", \"-XX:GCTimeLimit=15\", \"-XX:GCHeapFreeLimit=50\", \"-XX:+HeapDumpOnOutOfMemoryError\", \"-XX:HeapDumpPath=logs/\", \"-XX:ErrorFile=logs/hs_err_pid%p.log\", \"-agentlib:jdwp=transport=dt_socket,server=y,address=9009,suspend=n\", \"-Dderby.stream.error.file=logs/derby.log\", \"-Dderby.infolog.append=true\", \"-Dderby.language.logStatementText=true\", \"-Dderby.locks.deadlockTrace=true\", \"-Dderby.locks.monitor=true\", \"-Dderby.storage.rowLocking=true\", \"-Dcom.sun.management.jmxremote\", \"-Dcom.sun.management.jmxremote.port=7900\", \"-Dcom.sun.management.jmxremote.ssl=false\", \"-Dcom.sun.management.jmxremote.authenticate=false\", \"-ea\", \"-jar\", \"easybuggy.jar\"]\n"
+                        ]
+                    ],
+                    "file_path": "/Dockerfile",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/Dockerfile",
+                    "repo_file_path": "/Dockerfile",
+                    "file_line_range": [
+                        1,
+                        8
+                    ],
+                    "resource": "/Dockerfile.",
+                    "evaluations": null,
+                    "check_class": "checkov.dockerfile.checks.WorkdirIsAbsolute",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-docker-workdir-values-are-absolute-paths",
+                    "details": [],
+                    "check_len": null
+                }
+            ],
+            "failed_checks": [
+                {
+                    "check_id": "CKV_DOCKER_2",
+                    "bc_check_id": "BC_DKR_2",
+                    "check_name": "Ensure that HEALTHCHECK instructions have been added to container images",
+                    "check_result": {
+                        "result": "FAILED",
+                        "results_configuration": null
+                    },
+                    "code_block": [
+                        [
+                            1,
+                            "FROM maven:3.8-jdk-8 as builder\n"
+                        ],
+                        [
+                            2,
+                            "COPY . /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            3,
+                            "WORKDIR /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            4,
+                            "RUN mvn -B package\n"
+                        ],
+                        [
+                            5,
+                            "\n"
+                        ],
+                        [
+                            6,
+                            "FROM openjdk:8-slim\n"
+                        ],
+                        [
+                            7,
+                            "COPY --from=builder /usr/src/easybuggy/target/easybuggy.jar /\n"
+                        ],
+                        [
+                            8,
+                            "CMD [\"java\", \"-XX:MaxMetaspaceSize=128m\", \"-Xloggc:logs/gc_%p_%t.log\", \"-Xmx256m\", \"-XX:MaxDirectMemorySize=90m\", \"-XX:+UseSerialGC\", \"-XX:+PrintHeapAtGC\", \"-XX:+PrintGCDetails\", \"-XX:+PrintGCDateStamps\", \"-XX:+UseGCLogFileRotation\", \"-XX:NumberOfGCLogFiles=5\", \"-XX:GCLogFileSize=10M\", \"-XX:GCTimeLimit=15\", \"-XX:GCHeapFreeLimit=50\", \"-XX:+HeapDumpOnOutOfMemoryError\", \"-XX:HeapDumpPath=logs/\", \"-XX:ErrorFile=logs/hs_err_pid%p.log\", \"-agentlib:jdwp=transport=dt_socket,server=y,address=9009,suspend=n\", \"-Dderby.stream.error.file=logs/derby.log\", \"-Dderby.infolog.append=true\", \"-Dderby.language.logStatementText=true\", \"-Dderby.locks.deadlockTrace=true\", \"-Dderby.locks.monitor=true\", \"-Dderby.storage.rowLocking=true\", \"-Dcom.sun.management.jmxremote\", \"-Dcom.sun.management.jmxremote.port=7900\", \"-Dcom.sun.management.jmxremote.ssl=false\", \"-Dcom.sun.management.jmxremote.authenticate=false\", \"-ea\", \"-jar\", \"easybuggy.jar\"]\n"
+                        ]
+                    ],
+                    "file_path": "/Dockerfile",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/Dockerfile",
+                    "repo_file_path": "/Dockerfile",
+                    "file_line_range": [
+                        1,
+                        8
+                    ],
+                    "resource": "/Dockerfile.",
+                    "evaluations": null,
+                    "check_class": "checkov.dockerfile.checks.HealthcheckExists",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-that-healthcheck-instructions-have-been-added-to-container-images",
+                    "details": [],
+                    "check_len": null
+                },
+                {
+                    "check_id": "CKV_DOCKER_3",
+                    "bc_check_id": "BC_DKR_3",
+                    "check_name": "Ensure that a user for the container has been created",
+                    "check_result": {
+                        "result": "FAILED",
+                        "results_configuration": null
+                    },
+                    "code_block": [
+                        [
+                            1,
+                            "FROM maven:3.8-jdk-8 as builder\n"
+                        ],
+                        [
+                            2,
+                            "COPY . /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            3,
+                            "WORKDIR /usr/src/easybuggy/\n"
+                        ],
+                        [
+                            4,
+                            "RUN mvn -B package\n"
+                        ],
+                        [
+                            5,
+                            "\n"
+                        ],
+                        [
+                            6,
+                            "FROM openjdk:8-slim\n"
+                        ],
+                        [
+                            7,
+                            "COPY --from=builder /usr/src/easybuggy/target/easybuggy.jar /\n"
+                        ],
+                        [
+                            8,
+                            "CMD [\"java\", \"-XX:MaxMetaspaceSize=128m\", \"-Xloggc:logs/gc_%p_%t.log\", \"-Xmx256m\", \"-XX:MaxDirectMemorySize=90m\", \"-XX:+UseSerialGC\", \"-XX:+PrintHeapAtGC\", \"-XX:+PrintGCDetails\", \"-XX:+PrintGCDateStamps\", \"-XX:+UseGCLogFileRotation\", \"-XX:NumberOfGCLogFiles=5\", \"-XX:GCLogFileSize=10M\", \"-XX:GCTimeLimit=15\", \"-XX:GCHeapFreeLimit=50\", \"-XX:+HeapDumpOnOutOfMemoryError\", \"-XX:HeapDumpPath=logs/\", \"-XX:ErrorFile=logs/hs_err_pid%p.log\", \"-agentlib:jdwp=transport=dt_socket,server=y,address=9009,suspend=n\", \"-Dderby.stream.error.file=logs/derby.log\", \"-Dderby.infolog.append=true\", \"-Dderby.language.logStatementText=true\", \"-Dderby.locks.deadlockTrace=true\", \"-Dderby.locks.monitor=true\", \"-Dderby.storage.rowLocking=true\", \"-Dcom.sun.management.jmxremote\", \"-Dcom.sun.management.jmxremote.port=7900\", \"-Dcom.sun.management.jmxremote.ssl=false\", \"-Dcom.sun.management.jmxremote.authenticate=false\", \"-ea\", \"-jar\", \"easybuggy.jar\"]\n"
+                        ]
+                    ],
+                    "file_path": "/Dockerfile",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/Dockerfile",
+                    "repo_file_path": "/Dockerfile",
+                    "file_line_range": [
+                        1,
+                        8
+                    ],
+                    "resource": "/Dockerfile.",
+                    "evaluations": null,
+                    "check_class": "checkov.dockerfile.checks.UserExists",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-that-a-user-for-the-container-has-been-created",
+                    "details": [],
+                    "check_len": null
+                }
+            ],
+            "skipped_checks": [],
+            "parsing_errors": []
+        },
+        "summary": {
+            "passed": 5,
+            "failed": 2,
+            "skipped": 0,
+            "parsing_errors": 0,
+            "resource_count": 1,
+            "checkov_version": "2.2.158"
+        },
+        "url": "Add an api key '--bc-api-key <api-key>' to see more detailed insights via https://bridgecrew.cloud"
+    },
+    {
+        "check_type": "github_actions",
+        "results": {
+            "passed_checks": [
+                {
+                    "check_id": "CKV_GHA_1",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_1",
+                    "check_name": "Ensure ACTIONS_ALLOW_UNSECURE_COMMANDS isn't true on environment variables",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "runs-on": "ubuntu-latest",
+                            "steps": [
+                                {
+                                    "uses": "actions/checkout@v3",
+                                    "__startline__": 11,
+                                    "__endline__": 16
+                                },
+                                {
+                                    "name": "Mend CLI Scan",
+                                    "env": {
+                                        "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                        "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                        "MEND_URL": "https://saas-eu.mend.io",
+                                        "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                        "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                        "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                        "__startline__": 19,
+                                        "__endline__": 26
+                                    },
+                                    "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                                    "__startline__": 16,
+                                    "__endline__": 32
+                                }
+                            ],
+                            "__startline__": 8,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            8,
+                            "        runs-on: ubuntu-latest\n"
+                        ],
+                        [
+                            9,
+                            "\n"
+                        ],
+                        [
+                            10,
+                            "        steps:\n"
+                        ],
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        8,
+                        33
+                    ],
+                    "resource": "jobs(build)",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.AllowUnsecureCommandsOnJob",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-actions_allow_unsecure_commands-isnt-true-on-environment-variables",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_5",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_5",
+                    "check_name": "Found artifact build without evidence of cosign sign execution in pipeline",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "build": {
+                                "runs-on": "ubuntu-latest",
+                                "steps": [
+                                    {
+                                        "uses": "actions/checkout@v3",
+                                        "__startline__": 11,
+                                        "__endline__": 16
+                                    },
+                                    {
+                                        "name": "Mend CLI Scan",
+                                        "env": {
+                                            "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                            "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                            "MEND_URL": "https://saas-eu.mend.io",
+                                            "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                            "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                            "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                            "__startline__": 19,
+                                            "__endline__": 26
+                                        },
+                                        "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                                        "__startline__": 16,
+                                        "__endline__": 32
+                                    }
+                                ],
+                                "__startline__": 8,
+                                "__endline__": 32
+                            },
+                            "__startline__": 7,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            7,
+                            "  build:\n"
+                        ],
+                        [
+                            8,
+                            "        runs-on: ubuntu-latest\n"
+                        ],
+                        [
+                            9,
+                            "\n"
+                        ],
+                        [
+                            10,
+                            "        steps:\n"
+                        ],
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        7,
+                        33
+                    ],
+                    "resource": "jobs",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.CosignArtifacts",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/no-evidence-of-signing",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_6",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_6",
+                    "check_name": "Found artifact build without evidence of cosign sbom attestation in pipeline",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "build": {
+                                "runs-on": "ubuntu-latest",
+                                "steps": [
+                                    {
+                                        "uses": "actions/checkout@v3",
+                                        "__startline__": 11,
+                                        "__endline__": 16
+                                    },
+                                    {
+                                        "name": "Mend CLI Scan",
+                                        "env": {
+                                            "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                            "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                            "MEND_URL": "https://saas-eu.mend.io",
+                                            "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                            "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                            "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                            "__startline__": 19,
+                                            "__endline__": 26
+                                        },
+                                        "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                                        "__startline__": 16,
+                                        "__endline__": 32
+                                    }
+                                ],
+                                "__startline__": 8,
+                                "__endline__": 32
+                            },
+                            "__startline__": 7,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            7,
+                            "  build:\n"
+                        ],
+                        [
+                            8,
+                            "        runs-on: ubuntu-latest\n"
+                        ],
+                        [
+                            9,
+                            "\n"
+                        ],
+                        [
+                            10,
+                            "        steps:\n"
+                        ],
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        7,
+                        33
+                    ],
+                    "resource": "jobs",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.CosignSBOM",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/found-artifact-build-without-evidence-of-cosign-sbom-attestation-in-pipeline",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_4",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_4",
+                    "check_name": "Suspicious use of netcat with IP address",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "runs-on": "ubuntu-latest",
+                            "steps": [
+                                {
+                                    "uses": "actions/checkout@v3",
+                                    "__startline__": 11,
+                                    "__endline__": 16
+                                },
+                                {
+                                    "name": "Mend CLI Scan",
+                                    "env": {
+                                        "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                        "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                        "MEND_URL": "https://saas-eu.mend.io",
+                                        "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                        "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                        "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                        "__startline__": 19,
+                                        "__endline__": 26
+                                    },
+                                    "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                                    "__startline__": 16,
+                                    "__endline__": 32
+                                }
+                            ],
+                            "__startline__": 8,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            8,
+                            "        runs-on: ubuntu-latest\n"
+                        ],
+                        [
+                            9,
+                            "\n"
+                        ],
+                        [
+                            10,
+                            "        steps:\n"
+                        ],
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        8,
+                        33
+                    ],
+                    "resource": "jobs(build)",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.ReverseShellNetcat",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/suspicious-use-of-netcat-with-ip-address",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_2",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_2",
+                    "check_name": "Ensure run commands are not vulnerable to shell injection",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "runs-on": "ubuntu-latest",
+                            "steps": [
+                                {
+                                    "uses": "actions/checkout@v3",
+                                    "__startline__": 11,
+                                    "__endline__": 16
+                                },
+                                {
+                                    "name": "Mend CLI Scan",
+                                    "env": {
+                                        "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                        "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                        "MEND_URL": "https://saas-eu.mend.io",
+                                        "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                        "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                        "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                        "__startline__": 19,
+                                        "__endline__": 26
+                                    },
+                                    "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                                    "__startline__": 16,
+                                    "__endline__": 32
+                                }
+                            ],
+                            "__startline__": 8,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            8,
+                            "        runs-on: ubuntu-latest\n"
+                        ],
+                        [
+                            9,
+                            "\n"
+                        ],
+                        [
+                            10,
+                            "        steps:\n"
+                        ],
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        8,
+                        33
+                    ],
+                    "resource": "jobs(build)",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.ShellInjection",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-run-commands-are-not-vulnerable-to-shell-injection",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_3",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_3",
+                    "check_name": "Suspicious use of curl with secrets",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "runs-on": "ubuntu-latest",
+                            "steps": [
+                                {
+                                    "uses": "actions/checkout@v3",
+                                    "__startline__": 11,
+                                    "__endline__": 16
+                                },
+                                {
+                                    "name": "Mend CLI Scan",
+                                    "env": {
+                                        "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                        "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                        "MEND_URL": "https://saas-eu.mend.io",
+                                        "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                        "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                        "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                        "__startline__": 19,
+                                        "__endline__": 26
+                                    },
+                                    "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                                    "__startline__": 16,
+                                    "__endline__": 32
+                                }
+                            ],
+                            "__startline__": 8,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            8,
+                            "        runs-on: ubuntu-latest\n"
+                        ],
+                        [
+                            9,
+                            "\n"
+                        ],
+                        [
+                            10,
+                            "        steps:\n"
+                        ],
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        8,
+                        33
+                    ],
+                    "resource": "jobs(build)",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.SuspectCurlInScript",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/suspicious-use-of-curl-with-secrets",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_7",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_7",
+                    "check_name": "The build output cannot be affected by user parameters other than the build entry point and the top-level source location. GitHub Actions workflow_dispatch inputs MUST be empty. ",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": "workflow_dispatch"
+                    },
+                    "code_block": [],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        0,
+                        1
+                    ],
+                    "resource": "on(Mend CLI Scan)",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.EmptyWorkflowDispatch",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/the-build-output-cannot-be-affected-by-user-parameters-other-than-the-build-entry-point-and-the-top-level-source-location-github-actions-workflow_dispatch-inputs-must-be-empty",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        ""
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_1",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_1",
+                    "check_name": "Ensure ACTIONS_ALLOW_UNSECURE_COMMANDS isn't true on environment variables",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "uses": "actions/checkout@v3",
+                            "__startline__": 11,
+                            "__endline__": 16
+                        }
+                    },
+                    "code_block": [
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        11,
+                        17
+                    ],
+                    "resource": "jobs(build).steps[1]",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.AllowUnsecureCommandsOnJob",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-actions_allow_unsecure_commands-isnt-true-on-environment-variables",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_1",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_1",
+                    "check_name": "Ensure ACTIONS_ALLOW_UNSECURE_COMMANDS isn't true on environment variables",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "name": "Mend CLI Scan",
+                            "env": {
+                                "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                "MEND_URL": "https://saas-eu.mend.io",
+                                "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                "__startline__": 19,
+                                "__endline__": 26
+                            },
+                            "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                            "__startline__": 16,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        16,
+                        33
+                    ],
+                    "resource": "jobs(build).steps[2](Mend CLI Scan)",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.AllowUnsecureCommandsOnJob",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-actions_allow_unsecure_commands-isnt-true-on-environment-variables",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_4",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_4",
+                    "check_name": "Suspicious use of netcat with IP address",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "uses": "actions/checkout@v3",
+                            "__startline__": 11,
+                            "__endline__": 16
+                        }
+                    },
+                    "code_block": [
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        11,
+                        17
+                    ],
+                    "resource": "jobs(build).steps[1]",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.ReverseShellNetcat",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/suspicious-use-of-netcat-with-ip-address",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_4",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_4",
+                    "check_name": "Suspicious use of netcat with IP address",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "name": "Mend CLI Scan",
+                            "env": {
+                                "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                "MEND_URL": "https://saas-eu.mend.io",
+                                "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                "__startline__": 19,
+                                "__endline__": 26
+                            },
+                            "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                            "__startline__": 16,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        16,
+                        33
+                    ],
+                    "resource": "jobs(build).steps[2](Mend CLI Scan)",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.ReverseShellNetcat",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/suspicious-use-of-netcat-with-ip-address",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_2",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_2",
+                    "check_name": "Ensure run commands are not vulnerable to shell injection",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "uses": "actions/checkout@v3",
+                            "__startline__": 11,
+                            "__endline__": 16
+                        }
+                    },
+                    "code_block": [
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        11,
+                        17
+                    ],
+                    "resource": "jobs(build).steps[1]",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.ShellInjection",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-run-commands-are-not-vulnerable-to-shell-injection",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_2",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_2",
+                    "check_name": "Ensure run commands are not vulnerable to shell injection",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "name": "Mend CLI Scan",
+                            "env": {
+                                "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                "MEND_URL": "https://saas-eu.mend.io",
+                                "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                "__startline__": 19,
+                                "__endline__": 26
+                            },
+                            "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                            "__startline__": 16,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        16,
+                        33
+                    ],
+                    "resource": "jobs(build).steps[2](Mend CLI Scan)",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.ShellInjection",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/ensure-run-commands-are-not-vulnerable-to-shell-injection",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_3",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_3",
+                    "check_name": "Suspicious use of curl with secrets",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "uses": "actions/checkout@v3",
+                            "__startline__": 11,
+                            "__endline__": 16
+                        }
+                    },
+                    "code_block": [
+                        [
+                            11,
+                            "        - uses: actions/checkout@v3\n"
+                        ],
+                        [
+                            12,
+                            "        # Add your package manager build here\n"
+                        ],
+                        [
+                            13,
+                            "        # name: Build with NPM\n"
+                        ],
+                        [
+                            14,
+                            "        # run: npm install\n"
+                        ],
+                        [
+                            15,
+                            "\n"
+                        ],
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        11,
+                        17
+                    ],
+                    "resource": "jobs(build).steps[1]",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.SuspectCurlInScript",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/suspicious-use-of-curl-with-secrets",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                },
+                {
+                    "check_id": "CKV_GHA_3",
+                    "bc_check_id": "BC_REPO_GITHUB_ACTION_3",
+                    "check_name": "Suspicious use of curl with secrets",
+                    "check_result": {
+                        "result": "PASSED",
+                        "results_configuration": {
+                            "name": "Mend CLI Scan",
+                            "env": {
+                                "MEND_EMAIL": "${{secrets.MEND_SCA_EMAIL}}",
+                                "MEND_USER_KEY": "${{secrets.MEND_SCA_USERKEY}}",
+                                "MEND_URL": "https://saas-eu.mend.io",
+                                "MEND_SAST_SERVER_URL": "https://saas-eu.mend.io/sast",
+                                "MEND_SAST_API_TOKEN": "${{secrets.MEND_SAST_API}}",
+                                "MEND_SAST_ORGANIZATION": "${{secrets.MEND_SAST_ORGANIZATION}}",
+                                "__startline__": 19,
+                                "__endline__": 26
+                            },
+                            "run": "echo Downloading Mend CLI\ncurl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\necho Start Mend CLI scan\n./mend sca\n./mend sast\n",
+                            "__startline__": 16,
+                            "__endline__": 32
+                        }
+                    },
+                    "code_block": [
+                        [
+                            16,
+                            "        - name: Mend CLI Scan\n"
+                        ],
+                        [
+                            17,
+                            "          env:\n"
+                        ],
+                        [
+                            18,
+                            "            #SCA\n"
+                        ],
+                        [
+                            19,
+                            "            MEND_EMAIL: ${{secrets.MEND_SCA_EMAIL}}\n"
+                        ],
+                        [
+                            20,
+                            "            MEND_USER_KEY: ${{secrets.MEND_SCA_USERKEY}}\n"
+                        ],
+                        [
+                            21,
+                            "            MEND_URL: https://saas-eu.mend.io\n"
+                        ],
+                        [
+                            22,
+                            "            #SAST\n"
+                        ],
+                        [
+                            23,
+                            "            MEND_SAST_SERVER_URL: https://saas-eu.mend.io/sast\n"
+                        ],
+                        [
+                            24,
+                            "            MEND_SAST_API_TOKEN: ${{secrets.MEND_SAST_API}}\n"
+                        ],
+                        [
+                            25,
+                            "            MEND_SAST_ORGANIZATION: ${{secrets.MEND_SAST_ORGANIZATION}}\n"
+                        ],
+                        [
+                            26,
+                            "          run: |\n"
+                        ],
+                        [
+                            27,
+                            "            echo Downloading Mend CLI\n"
+                        ],
+                        [
+                            28,
+                            "            curl -LJO https://downloads.mend.io/production/unified/latest/linux_amd64/mend && chmod +x mend\n"
+                        ],
+                        [
+                            29,
+                            "            echo Start Mend CLI scan\n"
+                        ],
+                        [
+                            30,
+                            "            ./mend sca\n"
+                        ],
+                        [
+                            31,
+                            "            ./mend sast\n"
+                        ]
+                    ],
+                    "file_path": "/.github/workflows/mend.yml",
+                    "file_abs_path": "/tmp/ws-scm/easybuggy/.github/workflows/mend.yml",
+                    "repo_file_path": "/.github/workflows/mend.yml",
+                    "file_line_range": [
+                        16,
+                        33
+                    ],
+                    "resource": "jobs(build).steps[2](Mend CLI Scan)",
+                    "evaluations": null,
+                    "check_class": "checkov.github_actions.checks.job.SuspectCurlInScript",
+                    "fixed_definition": null,
+                    "entity_tags": null,
+                    "caller_file_path": null,
+                    "caller_file_line_range": null,
+                    "resource_address": null,
+                    "severity": null,
+                    "bc_category": null,
+                    "benchmarks": null,
+                    "description": null,
+                    "short_description": null,
+                    "vulnerability_details": null,
+                    "connected_node": null,
+                    "guideline": "https://docs.bridgecrew.io/docs/suspicious-use-of-curl-with-secrets",
+                    "details": [],
+                    "check_len": null,
+                    "triggers": [
+                        [
+                            "workflow_dispatch"
+                        ]
+                    ],
+                    "job": [
+                        "build"
+                    ],
+                    "workflow_name": "Mend CLI Scan"
+                }
+            ],
+            "failed_checks": [],
+            "skipped_checks": [],
+            "parsing_errors": []
+        },
+        "summary": {
+            "passed": 15,
+            "failed": 0,
+            "skipped": 0,
+            "parsing_errors": 0,
+            "resource_count": 0,
+            "checkov_version": "2.2.158"
+        },
+        "url": "Add an api key '--bc-api-key <api-key>' to see more detailed insights via https://bridgecrew.cloud"
+    }
+]
