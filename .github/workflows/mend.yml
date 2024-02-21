@@ -22,4 +22,4 @@ jobs:
             echo Start Mend CLI scan
             ./mend dep -u -s "Luke Brogan Demo - Github.com//GitHubActions//Easybuggy"
             ./mend code -j 1 -s "Luke Brogan Demo - Github.com//GitHubActions//Easybuggy" --remediate
-            ./mend image ubuntu:latest
+            ./mend image cytopia/dvwa
